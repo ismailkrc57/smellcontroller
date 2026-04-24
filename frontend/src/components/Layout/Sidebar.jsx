@@ -8,16 +8,26 @@ const navItems = [
   { to: '/detection', label: 'Koku Tespiti', icon: '◎' },
 ]
 
-export default function Sidebar({ connectionStatus, port }) {
-  const dotClass =
-    connectionStatus === 'live' ? 'conn-dot connected' :
+export default function Sidebar({ connectionStatus, port, wsStatus }) {
+  const sensorDot =
+    connectionStatus === 'live'     ? 'conn-dot connected' :
     connectionStatus === 'simulate' ? 'conn-dot simulated' :
     'conn-dot'
 
-  const connLabel =
-    connectionStatus === 'live' ? port :
-    connectionStatus === 'simulate' ? 'Simülatör' :
-    'Bağlı değil'
+  const sensorLabel =
+    connectionStatus === 'live'     ? 'Smell Inspector Bağlı' :
+    connectionStatus === 'simulate' ? 'Demo Modu' :
+    'Sensör bağlı değil'
+
+  const wsDot =
+    wsStatus === 'connected'   ? 'conn-dot connected' :
+    wsStatus === 'connecting'  ? 'conn-dot simulated' :
+    'conn-dot'
+
+  const wsLabel =
+    wsStatus === 'connected'  ? 'Sunucu bağlı' :
+    wsStatus === 'connecting' ? 'Bağlanıyor...' :
+    'Sunucu bağlantısı yok'
 
   return (
     <aside className="sidebar">
@@ -40,9 +50,13 @@ export default function Sidebar({ connectionStatus, port }) {
         ))}
       </nav>
       <div className="sidebar-footer">
+        <div className="conn-badge" style={{ marginBottom: 8 }}>
+          <div className={sensorDot} />
+          <span>{sensorLabel}</span>
+        </div>
         <div className="conn-badge">
-          <div className={dotClass} />
-          <span>{connLabel}</span>
+          <div className={wsDot} />
+          <span style={{ fontSize: 11 }}>{wsLabel}</span>
         </div>
       </div>
     </aside>

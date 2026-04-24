@@ -23,14 +23,14 @@ export default function App() {
     }
   }, [])
 
-  const { send } = useWebSocket(handleMessage)
+  const { send, wsStatus } = useWebSocket(handleMessage)
 
-  const sharedProps = { sensorData, connectionStatus, onSend: send }
+  const sharedProps = { sensorData, connectionStatus, onSend: send, wsStatus }
 
   return (
     <BrowserRouter>
       <div className="app-layout">
-        <Sidebar connectionStatus={connectionStatus} port={connectedPort} />
+        <Sidebar connectionStatus={connectionStatus} port={connectedPort} wsStatus={wsStatus} />
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Dashboard {...sharedProps} />} />

@@ -72,4 +72,5 @@ def active_model():
     return {
         "loaded": predictor.is_loaded,
         "model": predictor.active_model,
+        "classes": predictor.classes,
     }

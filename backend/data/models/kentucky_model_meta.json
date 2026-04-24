@@ -1,0 +1,1 @@
+{"label_map": {"0": "Ambient_Hava", "1": "Cay", "2": "CocaCola", "3": "Elma_Suyu", "4": "Kahve", "5": "RedBull", "6": "Su"}, "classes": ["Ambient_Hava", "Cay", "CocaCola", "Elma_Suyu", "Kahve", "RedBull", "Su"], "algorithm": "random_forest", "features": 16}

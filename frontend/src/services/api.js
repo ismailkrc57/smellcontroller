@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: 'http://localhost:8000' })
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
+const api = axios.create({ baseURL: BASE_URL })
 
 export const sensor = {
   getPorts: () => api.get('/sensor/ports'),
@@ -16,7 +18,7 @@ export const recording = {
   stop: () => api.post('/recording/stop'),
   status: () => api.get('/recording/status'),
   delete: (filename) => api.delete(`/recording/${filename}`),
-  downloadUrl: (filename) => `http://localhost:8000/recording/download/${filename}`,
+  downloadUrl: (filename) => `${BASE_URL}/recording/download/${filename}`,
 }
 
 export const training = {

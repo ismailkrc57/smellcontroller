@@ -80,8 +80,16 @@ async def train(csv_files: list[str], algorithm: str, model_name: str) -> dict:
 
     try:
         X, y, labels = load_recordings(csv_files)
+
+        if len(labels) < 2:
+            raise ValueError(
+                f"Model eğitmek için en az 2 farklı koku etiketi gerekli, "
+                f"sadece 1 etiket bulundu: '{labels[0]}'. "
+                f"Farklı koku etiketlerine sahip birden fazla CSV dosyası seçin."
+            )
+
         _training_status["progress"] = 25
-        _training_status["message"] = f"{len(X)} örnek yüklendi. Ölçeklendiriliyor..."
+        _training_status["message"] = f"{len(X)} örnek, {len(labels)} sınıf yüklendi. Ölçeklendiriliyor..."
 
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
@@ -109,18 +117,27 @@ async def train(csv_files: list[str], algorithm: str, model_name: str) -> dict:
         cm = confusion_matrix(y_test, y_pred).tolist()
         report = classification_report(y_test, y_pred, target_names=[str(l) for l in labels], output_dict=True)
 
-        # Save model and scaler
+        # Save model and its own scaler (avoid overwriting other models' scalers)
         safe_name = model_name.replace(" ", "_").replace("/", "_")
         if not safe_name.endswith(".pkl"):
             safe_name += ".pkl"
 
-        model_path = MODELS_DIR / safe_name
-        scaler_path = MODELS_DIR / "scaler.pkl"
+        model_path   = MODELS_DIR / safe_name
+        scaler_path  = MODELS_DIR / f"scaler_{safe_name}"
+        meta_path    = MODELS_DIR / safe_name.replace(".pkl", "_meta.json")
 
         joblib.dump(clf_clone, model_path)
         joblib.dump(scaler, scaler_path)
 
         label_map = {i: str(l) for i, l in enumerate(labels)}
+
+        import json
+        meta_path.write_text(json.dumps({
+            "label_map": label_map,
+            "classes": [str(l) for l in labels],
+            "algorithm": algorithm,
+            "features": int(X.shape[1]),
+        }))
 
         result = {
             "model_name": safe_name,

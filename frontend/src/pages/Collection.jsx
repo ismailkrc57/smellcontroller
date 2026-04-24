@@ -227,6 +227,110 @@ export default function Collection({ sensorData, connectionStatus }) {
         </div>
       </div>
 
+      {/* ── Usage Guide ── */}
+      <div className="card mb-4">
+        <div className="card-title">Nasıl Kullanılır? — Örnek: Bozuk Muz Tespiti</div>
+        <div style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 16, lineHeight: 1.6 }}>
+          Sensörü bir kokunun "nasıl göründüğünü" öğretmek için birden fazla kayıt almanız gerekir.
+          Model doğruluğu için her etiket için <strong style={{ color: 'var(--text)' }}>en az 5–10 kayıt</strong> önerilir.
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {[
+            {
+              step: '1', icon: '💨', label: 'ambient_hava',
+              title: 'Önce taban çizgisini kaydet',
+              desc: 'Sensörü temiz havaya maruz bırakın, etrafta koku olmadığında "ambient_hava" etiketiyle 3–5 kayıt alın. Bu, modelin "normal" koşulu öğrenmesini sağlar.',
+              tip: 'Etiket: ambient_hava',
+            },
+            {
+              step: '2', icon: '🍌', label: 'taze_muz',
+              title: 'Taze muz kaydet',
+              desc: 'Taze bir muzu soyun ve sensöre yaklaştırın. 3 fazlı protokolü açık bırakın: önce sensör stabilize olur, sonra muzu tutarsınız, sonra uzaklaştırırsınız. En az 5 kayıt alın.',
+              tip: 'Etiket: taze_muz',
+            },
+            {
+              step: '3', icon: '🍌', label: 'bozuk_muz',
+              title: 'Bozuk muz kaydet',
+              desc: 'Bekletilmiş veya kahverengilenmiş bir muzu sensöre tutun. Aynı şekilde 5+ kayıt alın. Model iki kokunun farkını bu verilerden öğrenir.',
+              tip: 'Etiket: bozuk_muz',
+            },
+            {
+              step: '4', icon: '⊞', label: null,
+              title: 'Model Eğitimi sayfasına geç',
+              desc: 'Tüm kayıtları seçin → Random Forest algoritmasıyla "muz_modeli" adıyla eğitin. Eğitim sonucunda confusion matrix ve doğruluk oranı göreceksiniz.',
+              tip: 'Sayfa: Model Eğitimi',
+            },
+            {
+              step: '5', icon: '◎', label: null,
+              title: 'Koku Tespiti sayfasında test et',
+              desc: 'Yeni bir muz tutun, "Şimdi Tara" butonuna basın. Model hangi koku olduğunu ve güven yüzdesini gösterecek.',
+              tip: 'Sayfa: Koku Tespiti',
+            },
+          ].map(item => (
+            <div key={item.step} style={{ display: 'flex', gap: 12, padding: '12px 14px', background: 'var(--surface2)', borderRadius: 8 }}>
+              <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 800, color: 'white', flexShrink: 0 }}>
+                {item.step}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                  <span style={{ fontSize: 18 }}>{item.icon}</span>
+                  <span style={{ fontSize: 13, fontWeight: 700 }}>{item.title}</span>
+                  {item.label && (
+                    <span style={{ fontSize: 10, padding: '2px 8px', background: 'rgba(108,99,255,0.2)', color: 'var(--accent)', borderRadius: 10, fontWeight: 600 }}>
+                      {item.tip}
+                    </span>
+                  )}
+                  {!item.label && (
+                    <span style={{ fontSize: 10, padding: '2px 8px', background: 'var(--surface)', color: 'var(--text-muted)', borderRadius: 10 }}>
+                      {item.tip}
+                    </span>
+                  )}
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.5 }}>{item.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ marginTop: 14, padding: '10px 14px', background: 'rgba(255,209,102,0.08)', border: '1px solid rgba(255,209,102,0.3)', borderRadius: 8, fontSize: 12, color: 'var(--text-muted)' }}>
+          <strong style={{ color: 'var(--warning)' }}>İpucu:</strong> Aynı etiketi farklı günlerde, farklı sıcaklıklarda kaydetmek modeli daha güçlü yapar.
+          Sadece 1–2 kayıtla eğitilen modeller gerçek kullanımda yanılabilir.
+        </div>
+      </div>
+
+      {/* ── Suggested Labels ── */}
+      <div className="card mb-4">
+        <div className="card-title">Öneri: Ne Kaydedebilirsiniz?</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+          {[
+            { icon: '💨', label: 'ambient_hava', desc: 'Her projede zorunlu taban çizgisi' },
+            { icon: '🍌', label: 'taze_muz', desc: 'Gıda tazeliği' },
+            { icon: '🍌', label: 'bozuk_muz', desc: 'Gıda bozulması' },
+            { icon: '🍎', label: 'taze_elma', desc: 'Meyve kalitesi' },
+            { icon: '🥛', label: 'taze_sut', desc: 'Süt tazeliği' },
+            { icon: '🥛', label: 'bozuk_sut', desc: 'Süt bozulması' },
+            { icon: '🧴', label: 'kolonya', desc: 'Kimyasal referans' },
+            { icon: '☕', label: 'kahve', desc: 'Kimyasal referans' },
+            { icon: '🌿', label: 'nane', desc: 'Bitki kokuları' },
+            { icon: '🔥', label: 'yanma_kokusu', desc: 'Güvenlik uyarısı' },
+          ].map(item => (
+            <div key={item.label}
+              style={{ padding: '8px 12px', background: 'var(--surface2)', borderRadius: 8, cursor: 'pointer', border: '1px solid var(--border)' }}
+              onClick={() => { setLabel(item.label) }}
+              title={`"${item.label}" etiketini kullan`}
+            >
+              <div style={{ fontSize: 18, textAlign: 'center', marginBottom: 4 }}>{item.icon}</div>
+              <div style={{ fontSize: 11, fontWeight: 600, textAlign: 'center' }}>{item.label}</div>
+              <div style={{ fontSize: 10, color: 'var(--text-muted)', textAlign: 'center' }}>{item.desc}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8 }}>
+          Bir kartı tıklayınca etiket kutusuna otomatik girer.
+        </div>
+      </div>
+
       {/* Recordings List */}
       <div className="card">
         <div className="flex justify-between items-center mb-3">

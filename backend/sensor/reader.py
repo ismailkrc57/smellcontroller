@@ -7,16 +7,46 @@ import time
 from config import SERIAL_BAUD, SERIAL_TIMEOUT, NUM_CHANNELS
 
 
+def _is_smell_inspector(p) -> bool:
+    hwid = p.hwid or ""
+    desc = p.description or ""
+    mfr  = p.manufacturer or ""
+    dev  = p.device or ""
+    excluded = any(x in dev for x in ["Bluetooth", "debug-console", "QCY", "iPhone", "iPad"])
+    is_usb_uart = (
+        "10C4:EA60" in hwid or   # Silicon Labs CP210x VID:PID
+        "CP210"     in desc or
+        "Silicon Labs" in mfr or
+        ("usbserial" in dev and not excluded)
+    )
+    return is_usb_uart and not excluded
+
+
+def _friendly_name(p) -> str:
+    serial_no = None
+    if p.hwid:
+        import re
+        m = re.search(r"SER=(\w+)", p.hwid)
+        if m:
+            serial_no = m.group(1)
+    name = "Smell Inspector"
+    if serial_no and serial_no != "0001":
+        name += f" · {serial_no}"
+    return name
+
+
 def list_ports() -> list[dict]:
     ports = serial.tools.list_ports.comports()
     result = []
     for p in ports:
-        result.append({
-            "device": p.device,
-            "description": p.description or "Unknown",
-            "hwid": p.hwid or "",
-            "manufacturer": p.manufacturer or "",
-        })
+        if _is_smell_inspector(p):
+            result.append({
+                "device": p.device,
+                "description": p.description or "USB Seri Aygıt",
+                "friendly_name": _friendly_name(p),
+                "hwid": p.hwid or "",
+                "manufacturer": p.manufacturer or "",
+            })
     return result
 
 
