@@ -99,7 +99,6 @@ def prepare_media(src_dir: Path, public: Path):
             _fit(photos / fname, out / "industry" / f"{key}-card.webp", 1024)
 
     _fit(product / "son-4.png", out / "product" / "device.webp", 1100, quality=85)
-    _fit(product / "sensör fotoğrafımız.jpeg", out / "product" / "sensor.webp", 796, quality=85)
     _fit(product / "8.png", out / "product" / "dashboard-devices.webp", 1800, quality=85)
     _fit(product / "9.png", out / "product" / "dashboard-screens.webp", 1400, quality=85)
     _fit(product / "260508_YARININ_TEKNOLOJI_LIDERLERI_2026KSP01888.JPG", out / "product" / "holding.webp", 2000, quality=82)
@@ -263,8 +262,8 @@ def apply_media(s: str, login_url: str) -> str:
 
     # "From molecules to meaning": NOZE çipli el → SmellControl sensörü
     sensor_style = "object-fit:contain;mix-blend-mode:multiply;box-sizing:border-box"
-    s = _set_img(s, "WhiteChip%20big", f"{M}/product/sensor.webp", sensor_style + ";padding:34vh 16% 7vh")
-    s = _set_img(s, "WhiteChip_Mobile", f"{M}/product/sensor.webp", sensor_style + ";padding:2rem 22%")
+    s = _set_img(s, "WhiteChip%20big", f"{M}/product/hero-4k.webp", sensor_style + ";padding:34vh 6% 6vh")
+    s = _set_img(s, "WhiteChip_Mobile", f"{M}/product/hero-4k.webp", sensor_style + ";padding:2rem 4%")
 
     # "A breakthrough to [be]hold": NOZE cihazı → SmellControl cihazı + kutu
     s = _set_img(s, "new%202%20noze", f"{M}/product/holding.webp", "object-fit:cover;object-position:55% 22%")
