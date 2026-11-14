@@ -41,3 +41,9 @@ export const detection = {
 }
 
 export default api
+
+export const auth = {
+  login: (email, password) => api.post('/auth/login', { email, password }),
+  register: (name, email, password) => api.post('/auth/register', { name, email, password }),
+  me: (token) => api.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } }),
+}

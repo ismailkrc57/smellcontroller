@@ -1,0 +1,4 @@
+backend/data/users.json
+backend/data/.auth_secret
+landing_raw/
+scripts/__pycache__/

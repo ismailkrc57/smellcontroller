@@ -28,7 +28,8 @@ Script ilk çalıştırmada tüm bağımlılıkları otomatik kurar:
 
 Uygulama başladıktan sonra:
 
-- **Web Arayüzü:** http://localhost:5173
+- **Landing (tanıtım sitesi):** http://localhost:5173
+- **Dashboard:** http://localhost:5173/app — giriş gerektirir
 - **API Docs:** http://localhost:8000/docs
 
 Durdurmak için `Ctrl+C`.
@@ -157,3 +158,39 @@ lsof -iTCP:8000 -sTCP:LISTEN
 
 **Eğitim hatası: "tek sınıf"**
 - En az 2 farklı etiketli CSV dosyası seçin
+
+---
+
+## Landing ve Giriş
+
+`http://localhost:5173/` adresindeki tanıtım sitesi, www.noze.ca'nın HTTrack ile alınmış
+kopyasından üretilir; Canva tasarımındaki değişiklikler (SmellControl metinleri, kaldırılan
+bölümler, sektör listesi, footer) `scripts/build_landing.py` içinde uygulanır.
+
+Siteyi yeniden üretmek için:
+
+```bash
+brew install httrack
+httrack "https://www.noze.ca/" -O landing_raw "+*.noze.ca/*" "+*website-files.com/*" "+*cloudfront.net/*" "+*jsdelivr.net/*" -r6 -s0
+python3 scripts/build_landing.py landing_raw frontend/public ../smellcontrol_analiz
+```
+
+Üçüncü argüman SmellControl görsel klasörüdür (`Fotolar_edit/` sektör fotoğrafları, `ürün/` ürün
+görselleri). Verilirse görseller küçültülüp `frontend/public/media/` altına yazılır; verilmezse mevcut
+`media/` klasörü kullanılır. Sektör fotoğrafları "Every industry has a scent" kayan galerisinde ve
+sektör kartlarında, ürün görselleri logo, cihaz, sensör, dashboard ve arka plan alanlarında kullanılır
+(`scripts/landing_media.py`).
+
+Not: Webflow'un dinamik yüklediği `webflow.achunk.*.js` dosyalarını HTTrack çekmez; bunlar
+`landing_raw/cdn.prod.website-files.com/68caa5662c5043080c6bd4d7/js/` altına ayrıca indirildi.
+
+**Giriş:** Landing'deki "Log in" bağlantısı `/app/login` sayfasına gider. Kullanıcılar
+`backend/data/users.json` dosyasında (PBKDF2 hash) tutulur; ilk çalıştırmada bir demo hesap
+oluşturulur:
+
+| E-posta | Şifre |
+|---------|-------|
+| `demo@smellcontrol.io` | `smellcontrol` |
+
+Demo hesabı `SMELL_DEMO_EMAIL` / `SMELL_DEMO_PASSWORD` ortam değişkenleriyle değiştirilebilir.
+Giriş ekranındaki "Sign up" ile yeni hesap da açılabilir.

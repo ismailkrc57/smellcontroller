@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { getSession, clearSession } from '../../services/session'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '▦' },
@@ -9,6 +10,10 @@ const navItems = [
 ]
 
 export default function Sidebar({ connectionStatus, port, wsStatus }) {
+  const navigate = useNavigate()
+  const user = getSession()?.user
+  const logout = () => { clearSession(); navigate('/login', { replace: true }) }
+
   const sensorDot =
     connectionStatus === 'live'     ? 'conn-dot connected' :
     connectionStatus === 'simulate' ? 'conn-dot simulated' :
@@ -32,7 +37,7 @@ export default function Sidebar({ connectionStatus, port, wsStatus }) {
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <h1>SmellController</h1>
+        <h1>SmellControl</h1>
         <span>E-Nose Platform</span>
       </div>
       <nav className="nav-section">
@@ -57,6 +62,10 @@ export default function Sidebar({ connectionStatus, port, wsStatus }) {
         <div className="conn-badge">
           <div className={wsDot} />
           <span style={{ fontSize: 11 }}>{wsLabel}</span>
+        </div>
+        <div className="user-box">
+          <span className="user-email" title={user?.email}>{user?.name || user?.email}</span>
+          <button className="logout-btn" onClick={logout}>Çıkış yap</button>
         </div>
       </div>
     </aside>
