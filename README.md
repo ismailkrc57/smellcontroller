@@ -224,14 +224,17 @@ Bu yüzden ayrıca API adresi tanımlamak gerekmez.
    Not: Demo hesabı sadece ilk açılışta, `users.json` henüz yokken oluşturulur.
 5. **Domains** sekmesi → alan adını ekleyin: **Service:** `web`, **Port:** `80`, HTTPS açık
    (Let's Encrypt). Alan adının DNS kaydı (A kaydı) Dokploy sunucusunun IP'sini göstermeli.
-6. **Deploy**.
+6. **Deploy**. Alan adı eklendikten veya değiştirildikten sonra mutlaka yeniden **Deploy** edin;
+   Dokploy yönlendirme ayarını konteynerlere deploy sırasında ekler.
 
 Yayın sonrası: `https://alanadiniz/` landing, `https://alanadiniz/app` dashboard girişidir.
 
 ### Notlar
 
 - `docker-compose.yml` port yayınlamaz; trafiği Dokploy'un Traefik'i alan adı üzerinden `web`
-  servisine yönlendirir.
+  servisine yönlendirir. `web`, Traefik'in ağı olan `dokploy-network`'e bağlıdır.
+- Alan adı açılınca düz metin `404 page not found` görüyorsanız istek Traefik'te kalıyor demektir:
+  yeniden Deploy edin ve Deployments sekmesindeki logda derlemenin başarılı olduğunu kontrol edin.
 - `smell-data` volume'ü ilk oluşturulduğunda imajdaki `backend/data` içeriğiyle (hazır modeller,
   veri setleri) dolar. Sonraki yayınlarda volume korunur, yani repoya eklenen yeni hazır modeller
   volume'e otomatik geçmez.
@@ -244,5 +247,5 @@ Yerelde aynı kurulumu denemek için:
 docker compose up --build
 ```
 
-(Compose dosyası port açmadığından yerel denemede `web` servisine geçici olarak
-`ports: ["8080:80"]` ekleyin.)
+Yerel denemede önce `docker network create dokploy-network` çalıştırın ve compose dosyası port
+açmadığından `web` servisine geçici olarak `ports: ["8080:80"]` ekleyin.

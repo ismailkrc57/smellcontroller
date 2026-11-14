@@ -1,5 +1,6 @@
 # Dokploy (Docker Compose) ile yayın için. Alan adı Dokploy arayüzünden
 # "web" servisine, 80 portuna bağlanır; burada port yayınlanmaz.
+# Domain ekledikten/değiştirdikten sonra mutlaka yeniden Deploy edin.
 services:
   backend:
     build:
@@ -13,15 +14,29 @@ services:
       - smell-data:/app/data
     expose:
       - "8000"
+    networks:
+      default:
+        # nginx bu isimle bağlanır; paylaşılan ağdaki başka "backend"lerle karışmaz
+        aliases:
+          - smellcontrol-api
 
   web:
     build:
       context: ./frontend
     restart: unless-stopped
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     expose:
       - "80"
+    networks:
+      - default
+      # Dokploy'un Traefik'i trafiği bu ağ üzerinden "web" servisine iletir
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
 
 volumes:
   smell-data:
