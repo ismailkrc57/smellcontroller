@@ -25,7 +25,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from landing_media import apply_media, prepare_media  # noqa: E402
 
 LOGIN_URL = "/app/login"
-INSTAGRAM_URL = "https://www.instagram.com/"  # TODO: gerçek Instagram hesabı
+INSTAGRAM_URL = "https://www.instagram.com/astrosittech/"
+RESEARCH_MAIL = "mailto:info@astrosittech.com?subject=SmellControl%20Research%20Program"
 ACCENT = "#04E0B0"
 
 ASSET_DIRS = [
@@ -190,7 +191,7 @@ def transform(s: str) -> str:
     s = re.sub(
         r'<div class="footer_links-wrapper">.*?</div>',
         '<div class="footer_links-wrapper"><span class="footer_link" style="cursor:default">'
-        'An Astroit product</span></div>',
+        'An Astrosit product</span></div>',
         s, count=1, flags=re.S,
     )
     s = re.sub(
@@ -200,6 +201,22 @@ def transform(s: str) -> str:
     )
     s = s.replace("© 2025 Noze. All rights reserved.", "© 2026 SmellControl. All rights reserved.")
     s = re.sub(r'href="(privacy-policy|terms-of-service)\.html"', 'href="#"', s)
+
+    # ── Hero butonu: ASCO özeti → araştırma programı (e-posta) ────────
+    s = must_replace(
+        s,
+        '<a href="https://meetings.asco.org/abstracts-presentations/250153" target="_blank" '
+        'class="button is-secondary item w-inline-block"><div>See our ASCO 2025 Abstract</div>',
+        f'<a href="{RESEARCH_MAIL}" class="button is-secondary item w-inline-block">'
+        '<div>Join our research program</div>',
+    )
+
+    # ── Science bölümü butonu: yayınlar → "Grounded in Data." (dashboard) ──
+    s = re.sub(
+        r'<a data-anim="item" href="[^"]*" class="button is-secondary w-inline-block"><div>See our Publications</div>',
+        f'<a data-anim="item" href="{LOGIN_URL}" class="button is-secondary w-inline-block"><div>Grounded in Data.</div>',
+        s, count=1,
+    )
 
     # ── Kalan Noze sayfa bağlantıları ────────────────────────────────
     s = re.sub(r'href="(contact|the-team)\.html"', f'href="{LOGIN_URL}"', s)

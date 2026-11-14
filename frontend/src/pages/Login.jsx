@@ -40,7 +40,7 @@ export default function Login() {
 
       <div className="login-main">
         <div className="login-visual" aria-hidden="true">
-          <img src="/media/product/dashboard-screens.webp" alt="" />
+          <img src="/media/product/hero-4k.webp" alt="" />
           <p>Live monitoring, model training and odor detection — all in one dashboard.</p>
         </div>
 

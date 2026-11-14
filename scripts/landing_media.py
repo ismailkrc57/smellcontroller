@@ -102,7 +102,8 @@ def prepare_media(src_dir: Path, public: Path):
     _fit(product / "sensör fotoğrafımız.jpeg", out / "product" / "sensor.webp", 796, quality=85)
     _fit(product / "8.png", out / "product" / "dashboard-devices.webp", 1800, quality=85)
     _fit(product / "9.png", out / "product" / "dashboard-screens.webp", 1400, quality=85)
-    _fit(product / "260508_YARININ_TEKNOLOJI_LIDERLERI_2026KSP01888.JPG", out / "product" / "event.webp", 2000)
+    _fit(product / "research-team.jpg", out / "product" / "research.webp", 2000)
+    _fit(product / "smellcontrol-hero-4k.png", out / "product" / "hero-4k.webp", 1400, quality=85)
     _fit(product / "ayazagaya-da-bilisim-vadisi.jpg", out / "product" / "office.webp", 1920)
     _tint(product / "smellcontrol_logo.png", public / "smellcontrol-logo.png", (4, 224, 176), 80)
     _tint(product / "smellcontrol_logo.png", public / "smellcontrol-logo-white.png", (255, 255, 255), 96)
@@ -282,7 +283,7 @@ def apply_media(s: str, login_url: str) -> str:
             raise SystemExit(f"Sektör kartı bulunamadı: {name}")
 
     # Arka planlar: haber görseli → etkinlik, Noze binası → Bilişim Vadisi
-    s = _set_img(s, "_News.avif", f"{M}/product/event.webp", "filter:brightness(.42)")
+    s = _set_img(s, "_News.avif", f"{M}/product/research.webp", "filter:brightness(.5)")
     s = _set_img(s, "_Building.avif", f"{M}/product/office.webp", "filter:brightness(.62)")
 
     # "The future is in motion": dashboard ekranları
