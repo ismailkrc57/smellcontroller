@@ -102,6 +102,7 @@ def prepare_media(src_dir: Path, public: Path):
     _fit(product / "sensör fotoğrafımız.jpeg", out / "product" / "sensor.webp", 796, quality=85)
     _fit(product / "8.png", out / "product" / "dashboard-devices.webp", 1800, quality=85)
     _fit(product / "9.png", out / "product" / "dashboard-screens.webp", 1400, quality=85)
+    _fit(product / "260508_YARININ_TEKNOLOJI_LIDERLERI_2026KSP01888.JPG", out / "product" / "holding.webp", 2000, quality=82)
     _fit(product / "research-team.jpg", out / "product" / "research.webp", 2000)
     _fit(product / "smellcontrol-hero-4k.png", out / "product" / "hero-4k.webp", 1400, quality=85)
     _fit(product / "ayazagaya-da-bilisim-vadisi.jpg", out / "product" / "office.webp", 1920)
@@ -266,8 +267,8 @@ def apply_media(s: str, login_url: str) -> str:
     s = _set_img(s, "WhiteChip_Mobile", f"{M}/product/sensor.webp", sensor_style + ";padding:2rem 22%")
 
     # "A breakthrough to [be]hold": NOZE cihazı → SmellControl cihazı + kutu
-    s = _set_img(s, "new%202%20noze", f"{M}/product/device.webp", "object-fit:contain;background:#fff")
-    s = _set_img(s, "noze%20mobile", f"{M}/product/device.webp", "object-fit:contain;background:#fff;border-radius:1rem")
+    s = _set_img(s, "new%202%20noze", f"{M}/product/holding.webp", "object-fit:cover;object-position:55% 22%")
+    s = _set_img(s, "noze%20mobile", f"{M}/product/holding.webp", "object-fit:cover;object-position:60% 22%;border-radius:1rem")
     s = _set_img(s, "Noze%20Pill", f"{M}/product/device.webp", "display:none")
 
     # Sektör kartları: tıbbi görseller → sektör fotoğrafları
