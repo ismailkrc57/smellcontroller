@@ -194,3 +194,55 @@ oluşturulur:
 
 Demo hesabı `SMELL_DEMO_EMAIL` / `SMELL_DEMO_PASSWORD` ortam değişkenleriyle değiştirilebilir.
 Giriş ekranındaki "Sign up" ile yeni hesap da açılabilir.
+
+---
+
+## Dokploy ile Yayınlama
+
+Proje, Dokploy'un **Docker Compose** servisiyle tek seferde yayınlanacak şekilde ayarlıdır:
+
+| Servis | İçerik |
+|--------|--------|
+| `web` | nginx: landing (`/`), React dashboard (`/app`), API ve WebSocket'i backend'e yönlendirir |
+| `backend` | FastAPI (Python 3.12). Kullanıcılar, kayıtlar ve modeller `smell-data` volume'ünde tutulur |
+
+Tarayıcı sadece `web` servisine bağlanır; API çağrıları aynı alan adı üzerinden
+(`/auth`, `/sensor`, `/recording`, `/training`, `/detection`, `/ws/live`) backend'e gider.
+Bu yüzden ayrıca API adresi tanımlamak gerekmez.
+
+### Adımlar
+
+1. Kodu GitHub'a gönderin (Dokploy repodan çeker).
+2. Dokploy → **Project** → **Create Service** → **Compose**.
+3. **Provider:** GitHub (veya Git URL) → repo `smellcontroller`, yayınlanacak branch,
+   **Compose Path:** `./docker-compose.yml`.
+4. **Environment** sekmesi (isteğe bağlı, demo hesabını değiştirmek için):
+   ```
+   SMELL_DEMO_EMAIL=demo@smellcontrol.io
+   SMELL_DEMO_PASSWORD=guclu-bir-sifre
+   ```
+   Not: Demo hesabı sadece ilk açılışta, `users.json` henüz yokken oluşturulur.
+5. **Domains** sekmesi → alan adını ekleyin: **Service:** `web`, **Port:** `80`, HTTPS açık
+   (Let's Encrypt). Alan adının DNS kaydı (A kaydı) Dokploy sunucusunun IP'sini göstermeli.
+6. **Deploy**.
+
+Yayın sonrası: `https://alanadiniz/` landing, `https://alanadiniz/app` dashboard girişidir.
+
+### Notlar
+
+- `docker-compose.yml` port yayınlamaz; trafiği Dokploy'un Traefik'i alan adı üzerinden `web`
+  servisine yönlendirir.
+- `smell-data` volume'ü ilk oluşturulduğunda imajdaki `backend/data` içeriğiyle (hazır modeller,
+  veri setleri) dolar. Sonraki yayınlarda volume korunur, yani repoya eklenen yeni hazır modeller
+  volume'e otomatik geçmez.
+- Sunucuda USB sensör olmadığından dashboard "Sensör bağlı değil" gösterir; "Demo Modu" ile
+  simülasyon çalıştırılabilir.
+
+Yerelde aynı kurulumu denemek için:
+
+```bash
+docker compose up --build
+```
+
+(Compose dosyası port açmadığından yerel denemede `web` servisine geçici olarak
+`ports: ["8080:80"]` ekleyin.)

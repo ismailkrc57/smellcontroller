@@ -1,0 +1,27 @@
+# Dokploy (Docker Compose) ile yayın için. Alan adı Dokploy arayüzünden
+# "web" servisine, 80 portuna bağlanır; burada port yayınlanmaz.
+services:
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      SMELL_DEMO_EMAIL: ${SMELL_DEMO_EMAIL:-demo@smellcontrol.io}
+      SMELL_DEMO_PASSWORD: ${SMELL_DEMO_PASSWORD:-smellcontrol}
+    volumes:
+      # Kullanıcılar, kayıtlar ve eğitilen modeller yeniden yayında korunur
+      - smell-data:/app/data
+    expose:
+      - "8000"
+
+  web:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    expose:
+      - "80"
+
+volumes:
+  smell-data:
