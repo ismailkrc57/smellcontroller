@@ -11,6 +11,8 @@ from pathlib import Path
 
 from PIL import Image
 
+from landing_usecases import USECASES_CSS, USECASES_JS, prepare_usecase_media, usecases_html
+
 M = "/media"
 
 # (dosya, sektör, kullanım alanı) – sıra galerideki sırayla aynı
@@ -105,6 +107,7 @@ def prepare_media(src_dir: Path, public: Path):
     _fit(product / "research-team.jpg", out / "product" / "research.webp", 2000)
     _fit(product / "smellcontrol-hero-4k.png", out / "product" / "hero-4k.webp", 1400, quality=85)
     _fit(product / "ayazagaya-da-bilisim-vadisi.jpg", out / "product" / "office.webp", 1920)
+    prepare_usecase_media(photos, out, _fit)
     _tint(product / "smellcontrol_logo.png", public / "smellcontrol-logo.png", (4, 224, 176), 80)
     _tint(product / "smellcontrol_logo.png", public / "smellcontrol-logo-white.png", (255, 255, 255), 96)
 
@@ -304,4 +307,14 @@ def apply_media(s: str, login_url: str) -> str:
     s = s[:end] + gallery_html(login_url) + s[end:]
     s = s.replace("</head>", GALLERY_CSS + "</head>", 1)
     s = s.replace("</body>", GALLERY_JS + "</body>", 1)
+
+    # "Built for every industry" kartları → 4 aşamalı kullanım alanları (sticky paneller)
+    idx = s.find("Built for every industry")
+    start = s.rfind("<section", 0, idx)
+    end = s.find("</section>", idx) + len("</section>")
+    if idx < 0 or start < 0:
+        raise SystemExit("'Built for every industry' bölümü bulunamadı")
+    s = s[:start] + usecases_html() + s[end:]
+    s = s.replace("</head>", USECASES_CSS + "</head>", 1)
+    s = s.replace("</body>", USECASES_JS + "</body>", 1)
     return s

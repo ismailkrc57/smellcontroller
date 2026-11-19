@@ -6,6 +6,7 @@ import Monitor from './pages/Monitor'
 import Collection from './pages/Collection'
 import Training from './pages/Training'
 import Detection from './pages/Detection'
+import CommandCenter from './pages/CommandCenter'
 import Login from './pages/Login'
 import { useWebSocket } from './hooks/useWebSocket'
 import { getSession } from './services/session'
@@ -35,6 +36,7 @@ function DashboardShell() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Dashboard {...sharedProps} />} />
+          <Route path="/command" element={<CommandCenter />} />
           <Route path="/monitor" element={<Monitor {...sharedProps} />} />
           <Route path="/collection" element={<Collection {...sharedProps} />} />
           <Route path="/training" element={<Training />} />

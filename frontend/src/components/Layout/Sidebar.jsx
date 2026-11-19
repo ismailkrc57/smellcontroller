@@ -3,6 +3,7 @@ import { getSession, clearSession } from '../../services/session'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '▦' },
+  { to: '/command', label: 'Command Center', icon: '⌖' },
   { to: '/monitor', label: 'Canlı İzleme', icon: '◈' },
   { to: '/collection', label: 'Veri Toplama', icon: '⊕' },
   { to: '/training', label: 'Model Eğitimi', icon: '⊞' },
